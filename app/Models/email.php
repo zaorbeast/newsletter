@@ -12,6 +12,7 @@ class email extends Model
     protected $fillable = [
         'id',
         'email',
+        'Appid',
         'AppCode',
         'idApp'
     ];

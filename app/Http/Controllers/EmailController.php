@@ -63,6 +63,9 @@ class EmailController extends Controller
                 return response()->json( $e,400);
             }
         }
+        else{
+            return response()->json("AppCode error",400);
+        }
     }
     }
 
@@ -74,7 +77,7 @@ class EmailController extends Controller
      */
     public function show($id)
     {
-        $emails=email::where('emails.AppCode',$id)->paginate();
+        $emails=email::where('emails.AppCode',$id)->paginate(10);
         return  emaiRessource::collection($emails);
     }
 
