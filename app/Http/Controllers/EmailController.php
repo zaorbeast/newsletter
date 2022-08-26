@@ -50,17 +50,23 @@ class EmailController extends Controller
                 ->where('applications.AppCode', hash("sha256", $appCode))
                 ->select('applications.id')
                 ->get();
+                $AppId=0;
+               foreach($app as $appli){
+                $AppId=$appli->id;
+               }
+
             if (!$app->isEmpty()) {
                 try {
                     // $AppCode3=hash("sha256",$appCode);
                     $emails = new email();
                     $emails->email = $request->email;
+                 $emails->Appid=$AppId;
                     $emails->Appcode = hash("sha256", $request->Appcode);
                     if ($emails->save()) {
                         return response()->json(["task" => true]);
                     }
                 } catch (Exception $e) {
-                    return response()->json('database error', 500);
+                    return response()->json($e);
                 }
             } else {
                 return response()->json("AppCode error", 400);
