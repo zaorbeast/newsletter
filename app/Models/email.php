@@ -13,7 +13,7 @@ class email extends Model
         'id',
         'email',
         'Appid',
-        'AppCode',
+        'Appcode',
         'idApp'
     ];
 }

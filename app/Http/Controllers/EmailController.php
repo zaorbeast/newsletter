@@ -40,12 +40,12 @@ class EmailController extends Controller
      */
     public function store(Request $request)
     {
-        $rules=array('email'=>'required','AppCode'=>'required');
+        $rules=array('email'=>'required','Appcode'=>'required');
         $validator=Validator::make($request->all(),$rules);
         if ($validator->fails()) {
             return response()->json( $validator->errors(),400);
         } else {
-            $appCode=$request->AppCode;
+            $appCode=$request->Appcode;
             $app=DB::table('applications')
             ->where('applications.AppCode',hash("sha256",$appCode))
             ->select('applications.id')
@@ -55,7 +55,7 @@ class EmailController extends Controller
                // $AppCode3=hash("sha256",$appCode);
                 $emails=new email();
                 $emails->email=$request->email;
-                $emails->AppCode=hash("sha256",$request->AppCode);
+                $emails->Appcode=hash("sha256",$request->AppCode);
                 if ($emails->save()) {
                     return new EmaiRessource($emails);
                 }
@@ -77,7 +77,8 @@ class EmailController extends Controller
      */
     public function show($id)
     {
-        $emails=email::where('emails.AppCode',$id)->paginate(10);
+        $ids=hash('sha256',$id);
+        $emails=email::where('emails.Appcode',$ids)->paginate(10);
         return  emaiRessource::collection($emails);
     }
 
