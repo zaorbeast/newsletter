@@ -40,33 +40,32 @@ class EmailController extends Controller
      */
     public function store(Request $request)
     {
-        $rules=array('email'=>'required','Appcode'=>'required');
-        $validator=Validator::make($request->all(),$rules);
+        $rules = array('email' => 'required', 'Appcode' => 'required');
+        $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return response()->json( $validator->errors(),400);
+            return response()->json($validator->errors(), 400);
         } else {
-            $appCode=$request->Appcode;
-            $app=DB::table('applications')
-            ->where('applications.AppCode',hash("sha256",$appCode))
-            ->select('applications.id')
-            ->get();
-            if(!$app->isEmpty()){
-                try{
-               // $AppCode3=hash("sha256",$appCode);
-                $emails=new email();
-                $emails->email=$request->email;
-                $emails->Appcode=hash("sha256",$request->AppCode);
-                if ($emails->save()) {
-                    return new EmaiRessource($emails);
+            $appCode = $request->Appcode;
+            $app = DB::table('applications')
+                ->where('applications.AppCode', hash("sha256", $appCode))
+                ->select('applications.id')
+                ->get();
+            if (!$app->isEmpty()) {
+                try {
+                    // $AppCode3=hash("sha256",$appCode);
+                    $emails = new email();
+                    $emails->email = $request->email;
+                    $emails->Appcode = hash("sha256", $request->Appcode);
+                    if ($emails->save()) {
+                        return response()->json(["task" => true]);
+                    }
+                } catch (Exception $e) {
+                    return response()->json('database error', 500);
                 }
-            }catch(Exception $e){
-                return response()->json( $e,400);
+            } else {
+                return response()->json("AppCode error", 400);
             }
         }
-        else{
-            return response()->json("AppCode error",400);
-        }
-    }
     }
 
     /**
@@ -77,8 +76,8 @@ class EmailController extends Controller
      */
     public function show($id)
     {
-        $ids=hash('sha256',$id);
-        $emails=email::where('emails.Appcode',$ids)->paginate(10);
+        $ids = hash('sha256', $id);
+        $emails = email::where('emails.Appcode', $ids)->paginate(10);
         return  emaiRessource::collection($emails);
     }
 
@@ -102,7 +101,6 @@ class EmailController extends Controller
      */
     public function update(Request $request, $id)
     {
-
     }
 
     /**
