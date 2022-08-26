@@ -16,9 +16,9 @@ class CreateEmailsTable extends Migration
         Schema::create('emails', function (Blueprint $table) {
             $table->id();
             $table->string('email');
-            $table->unsignedBigInteger('Appid')->nullable();
+            $table->unsignedBigInteger('idApp')->nullable();
             $table->string('Appcode');
-            $table->foreign('Appid')->references('id')->on('applications');
+            $table->foreign('idApp')->references('id')->on('applications');
             $table->timestamps();
         });
     }

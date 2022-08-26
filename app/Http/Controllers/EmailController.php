@@ -60,13 +60,13 @@ class EmailController extends Controller
                     // $AppCode3=hash("sha256",$appCode);
                     $emails = new email();
                     $emails->email = $request->email;
-                 $emails->Appid=$AppId;
+                 $emails->idApp=$AppId;
                     $emails->Appcode = hash("sha256", $request->Appcode);
                     if ($emails->save()) {
                         return response()->json(["task" => true]);
                     }
                 } catch (Exception $e) {
-                    return response()->json($e);
+                    return response()->json("database error",500);
                 }
             } else {
                 return response()->json("AppCode error", 400);
